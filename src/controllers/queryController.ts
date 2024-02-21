@@ -16,18 +16,18 @@ export const createQuery = async (req: Request, res: Response) => {
   const { error } = expectedQuery.validate(queryData);
 
   if (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).send({ data: [], message: "", error: error.message });
     return;
   }
 
   const query = new Query(queryData);
   await query.save();
-  res.status(200).send(query);
+  res.status(200).send({ data: query, message: "", error: null });
 };
 
 export const getQueries = async (req: Request, res: Response) => {
-  const queries = await Query.find({status: { $in: ["read", "unread"] }});
-  res.send(queries);
+  const queries = await Query.find({ status: { $in: ["read", "unread"] } });
+  res.send({ data: queries, message: "", error: null });
 };
 
 export const getQuery = async (req: Request, res: Response) => {
@@ -36,7 +36,9 @@ export const getQuery = async (req: Request, res: Response) => {
   const { queryId } = req.params;
   const queryIdValid = expectedParams.validate(queryId);
   if (queryIdValid.error) {
-    res.status(404).send({ error: queryIdValid.error.message });
+    res
+      .status(404)
+      .send({ data: [], message: "", error: queryIdValid.error.message });
     return;
   }
 
@@ -49,13 +51,15 @@ export const getQuery = async (req: Request, res: Response) => {
     });
 
     if (!query) {
-      res.status(404).send({ error: "query not found" });
+      res
+        .status(404)
+        .send({ data: [], message: "query not found", error: null });
       return;
     }
     res.send(query);
   } catch {
     res.status(404);
-    res.send({ error: "query doesn't exist!" });
+    res.send({ data: [], message: "query doesn't exist!", error: null });
   }
 };
 
@@ -65,7 +69,9 @@ export const updateQuery = async (req: Request, res: Response) => {
   const { queryId } = req.params;
   const queryIdValid = expectedParams.validate(queryId);
   if (queryIdValid.error) {
-    res.status(404).send({ error: queryIdValid.error.message });
+    res
+      .status(404)
+      .send({ data: [], message: "", error: queryIdValid.error.message });
     return;
   }
 
@@ -75,7 +81,7 @@ export const updateQuery = async (req: Request, res: Response) => {
   const { error } = expectedQueryStatus.validate({ status: queryStatus });
 
   if (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).send({ data: [], message: "", error: error.message });
     return;
   }
 
@@ -89,11 +95,13 @@ export const updateQuery = async (req: Request, res: Response) => {
     );
 
     if (!query) {
-      res.status(404).send({ error: "query not found" });
+      res
+        .status(404)
+        .send({ data: [], message: "query not found", error: null });
       return;
     }
-    res.send(query);
+    res.send({ data: query, message: "", error: null });
   } catch (error: any) {
-    res.status(404).send({ error: error.message });
+    res.status(404).send({ data: [], message: "", error: error.message });
   }
 };

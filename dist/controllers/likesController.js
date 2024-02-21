@@ -21,7 +21,9 @@ const addLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { blogId } = req.params;
     const blogIdValid = validations_1.expectedParams.validate(blogId);
     if (blogIdValid.error) {
-        res.status(404).send({ error: blogIdValid.error.message });
+        res
+            .status(404)
+            .send({ data: [], message: "", error: blogIdValid.error.message });
         return;
     }
     // - Logic -----------------------------------------------
@@ -36,19 +38,24 @@ const addLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const like = new Like_1.default(newLike);
                 const result = yield like.save();
-                res.send(result);
+                const likes = yield Like_1.default.find({
+                    blogId: blogId,
+                });
+                res.send({ data: likes.length, message: "Liked", error: null });
             }
             catch (error) {
-                res.status(400).send({ error: error.message });
+                res.status(400).send({ data: [], message: "", error: error.message });
             }
         }
         else {
-            res.status(404).send("blog not found!");
+            res
+                .status(404)
+                .send({ data: [], message: "blog not found!", error: null });
             return;
         }
     }
     catch (error) {
-        res.status(400).send({ error: error.message });
+        res.status(400).send({ data: [], message: "", error: error.message });
     }
 });
 exports.addLike = addLike;
@@ -57,7 +64,7 @@ const getBlogLikes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     const { blogId } = req.params;
     const blogIdValid = validations_1.expectedParams.validate(blogId);
     if (blogIdValid.error) {
-        res.status(404).send({ error: blogIdValid.error.message });
+        res.status(404).send({ data: [], message: "", error: blogIdValid.error.message });
         return;
     }
     // - Logic -----------------------------------------------
@@ -65,16 +72,16 @@ const getBlogLikes = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (blogExist) {
         try {
             const likes = yield Like_1.default.find({
-                blogId: blogId
+                blogId: blogId,
             });
-            res.status(200).send(likes);
+            res.status(200).send({ data: likes.length, message: "", error: null });
         }
         catch (error) {
-            res.status(500).send({ error: error.message });
+            res.status(500).send({ data: [], message: "", error: error.message });
         }
     }
     else {
-        res.status(404).send("blog not found!");
+        res.status(404).send({ data: [], message: "blog not found!", error: null });
         return;
     }
 });

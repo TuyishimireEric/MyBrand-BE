@@ -11,10 +11,11 @@ export const addLike = async (req: Request, res: Response) => {
   const { blogId } = req.params;
   const blogIdValid = expectedParams.validate(blogId);
   if (blogIdValid.error) {
-    res.status(404).send({ error: blogIdValid.error.message });
+    res
+      .status(404)
+      .send({ data: [], message: "", error: blogIdValid.error.message });
     return;
   }
-
 
   // - Logic -----------------------------------------------
 
@@ -25,22 +26,28 @@ export const addLike = async (req: Request, res: Response) => {
     if (blogExist) {
       const newLike = {
         blogId: blogId,
-        likedBy: user ,
+        likedBy: user,
       };
 
       try {
         const like = new Like(newLike);
         const result = await like.save();
-        res.send(result);
+        const likes = await Like.find({
+          blogId: blogId,
+        });
+
+        res.send({data: likes.length, message: "Liked", error: null});
       } catch (error: any) {
-        res.status(400).send({ error: error.message });
+        res.status(400).send({ data: [], message: "", error: error.message });
       }
     } else {
-      res.status(404).send("blog not found!");
+      res
+        .status(404)
+        .send({ data: [], message: "blog not found!", error: null });
       return;
     }
   } catch (error: any) {
-    res.status(400).send({ error: error.message });
+    res.status(400).send({ data: [], message: "", error: error.message });
   }
 };
 
@@ -50,7 +57,7 @@ export const getBlogLikes = async (req: Request, res: Response) => {
   const { blogId } = req.params;
   const blogIdValid = expectedParams.validate(blogId);
   if (blogIdValid.error) {
-    res.status(404).send({ error: blogIdValid.error.message });
+    res.status(404).send({ data: [], message: "", error: blogIdValid.error.message });
     return;
   }
 
@@ -61,14 +68,14 @@ export const getBlogLikes = async (req: Request, res: Response) => {
   if (blogExist) {
     try {
       const likes = await Like.find({
-        blogId: blogId
+        blogId: blogId,
       });
-        res.status(200).send(likes);
+      res.status(200).send({data: likes.length, message: "", error: null});
     } catch (error: any) {
-      res.status(500).send({ error: error.message });
+      res.status(500).send({ data: [], message: "", error: error.message });
     }
   } else {
-    res.status(404).send("blog not found!");
+    res.status(404).send({ data: [], message:"blog not found!", error: null});
     return;
   }
 };

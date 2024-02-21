@@ -24,17 +24,17 @@ const createQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     ]);
     const { error } = validations_1.expectedQuery.validate(queryData);
     if (error) {
-        res.status(400).send({ error: error.message });
+        res.status(400).send({ data: [], message: "", error: error.message });
         return;
     }
     const query = new Query_1.default(queryData);
     yield query.save();
-    res.status(200).send(query);
+    res.status(200).send({ data: query, message: "", error: null });
 });
 exports.createQuery = createQuery;
 const getQueries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const queries = yield Query_1.default.find({ status: { $in: ["read", "unread"] } });
-    res.send(queries);
+    res.send({ data: queries, message: "", error: null });
 });
 exports.getQueries = getQueries;
 const getQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,7 +42,9 @@ const getQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId } = req.params;
     const queryIdValid = validations_1.expectedParams.validate(queryId);
     if (queryIdValid.error) {
-        res.status(404).send({ error: queryIdValid.error.message });
+        res
+            .status(404)
+            .send({ data: [], message: "", error: queryIdValid.error.message });
         return;
     }
     // - Logic -----------------------------------------------
@@ -52,14 +54,16 @@ const getQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             status: { $in: ["read", "unread"] },
         });
         if (!query) {
-            res.status(404).send({ error: "query not found" });
+            res
+                .status(404)
+                .send({ data: [], message: "query not found", error: null });
             return;
         }
         res.send(query);
     }
     catch (_a) {
         res.status(404);
-        res.send({ error: "query doesn't exist!" });
+        res.send({ data: [], message: "query doesn't exist!", error: null });
     }
 });
 exports.getQuery = getQuery;
@@ -68,14 +72,16 @@ const updateQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const { queryId } = req.params;
     const queryIdValid = validations_1.expectedParams.validate(queryId);
     if (queryIdValid.error) {
-        res.status(404).send({ error: queryIdValid.error.message });
+        res
+            .status(404)
+            .send({ data: [], message: "", error: queryIdValid.error.message });
         return;
     }
     // - Logic -----------------------------------------------
     const queryStatus = req.body.status;
     const { error } = validations_1.expectedQueryStatus.validate({ status: queryStatus });
     if (error) {
-        res.status(400).send({ error: error.message });
+        res.status(400).send({ data: [], message: "", error: error.message });
         return;
     }
     try {
@@ -83,13 +89,15 @@ const updateQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             status: queryStatus,
         }, { new: true });
         if (!query) {
-            res.status(404).send({ error: "query not found" });
+            res
+                .status(404)
+                .send({ data: [], message: "query not found", error: null });
             return;
         }
-        res.send(query);
+        res.send({ data: query, message: "", error: null });
     }
     catch (error) {
-        res.status(404).send({ error: error.message });
+        res.status(404).send({ data: [], message: "", error: error.message });
     }
 });
 exports.updateQuery = updateQuery;

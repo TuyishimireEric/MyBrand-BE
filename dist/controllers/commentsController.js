@@ -22,7 +22,9 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const { blogId } = req.params;
     const blogIdValid = validations_1.expectedParams.validate(blogId);
     if (blogIdValid.error) {
-        res.status(404).send({ error: blogIdValid.error.message });
+        res
+            .status(404)
+            .send({ data: [], message: "", error: blogIdValid.error.message });
         return;
     }
     // - Validate the body -------------------------------------
@@ -32,7 +34,7 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     ]);
     const { error } = validations_1.expectedComment.validate(commentData);
     if (error) {
-        res.status(404).send({ error: error.message });
+        res.status(404).send({ data: [], message: "", error: error.message });
         return;
     }
     // - Logic -----------------------------------------------
@@ -50,16 +52,18 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 res.send(result);
             }
             catch (error) {
-                res.status(400).send({ error: error.message });
+                res.status(400).send({ data: [], message: "", error: error.message });
             }
         }
         else {
-            res.status(404).send("blog not found!");
+            res
+                .status(404)
+                .send({ data: [], message: "blog not found!", error: null });
             return;
         }
     }
     catch (error) {
-        res.status(400).send({ error: error.message });
+        res.status(400).send({ data: [], message: "", error: error.message });
     }
 });
 exports.createComment = createComment;
@@ -71,13 +75,15 @@ const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const commentIdValid = validations_1.expectedParams.validate(commentId);
     if (blogIdValid.error || commentIdValid.error) {
         res.status(404).send({
+            data: [],
+            message: "",
             error: ((_a = blogIdValid.error) === null || _a === void 0 ? void 0 : _a.message) || ((_b = commentIdValid.error) === null || _b === void 0 ? void 0 : _b.message),
         });
         return;
     }
     const { error } = validations_1.expectedCommentUpdate.validate(req.body);
     if (error) {
-        res.status(400).send({ error: error.message });
+        res.status(400).send({ data: [], message: "", error: error.message });
         return;
     }
     // - Logic -----------------------------------------------
@@ -90,17 +96,19 @@ const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 new: true,
             });
             if (!comment) {
-                res.status(400).send("Comment not found");
+                res
+                    .status(400)
+                    .send({ data: [], message: "Comment no found!", error: null });
                 return;
             }
             res.send(comment);
         }
         catch (error) {
-            res.status(400).send({ error: error.message });
+            res.status(400).send({ data: [], message: "", error: error.message });
         }
     }
     else {
-        res.status(404).send("blog not found!");
+        res.status(404).send({ data: [], message: "Blog no found!", error: null });
         return;
     }
 });
@@ -110,7 +118,9 @@ const getBlogComments = (req, res) => __awaiter(void 0, void 0, void 0, function
     const { blogId } = req.params;
     const blogIdValid = validations_1.expectedParams.validate(blogId);
     if (blogIdValid.error) {
-        res.status(404).send({ error: blogIdValid.error.message });
+        res
+            .status(404)
+            .send({ data: [], message: "", error: blogIdValid.error.message });
         return;
     }
     // - Logic -----------------------------------------------
@@ -122,14 +132,18 @@ const getBlogComments = (req, res) => __awaiter(void 0, void 0, void 0, function
                 visible: true,
             });
             if (comments.length === 0) {
-                res.status(404).send({ error: "No comments found for this blog" });
+                res.status(404).send({
+                    data: [],
+                    message: "No comments found for this blog",
+                    error: null,
+                });
             }
             else {
-                res.status(200).send(comments);
+                res.status(200).send({ data: comments, message: "", error: null });
             }
         }
         catch (error) {
-            res.status(500).send({ error: error.message });
+            res.status(500).send({ data: [], message: "", error: error.message });
         }
     }
     else {
@@ -146,6 +160,8 @@ const getAComment = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const commentIdValid = validations_1.expectedParams.validate(commentId);
     if (blogIdValid.error || commentIdValid.error) {
         res.status(404).send({
+            data: [],
+            message: "",
             error: ((_c = blogIdValid.error) === null || _c === void 0 ? void 0 : _c.message) || ((_d = commentIdValid.error) === null || _d === void 0 ? void 0 : _d.message),
         });
         return;
@@ -156,18 +172,22 @@ const getAComment = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         try {
             const comment = yield Comment_1.default.findOne({ _id: req.params.commentId });
             if (comment) {
-                res.status(200).send(comment);
+                res.status(200).send({ data: comment, message: "", error: null });
             }
             else {
-                res.status(400).send("comment not found!");
+                res
+                    .status(400)
+                    .send({ data: [], message: "Comments not found !!", error: null });
             }
         }
         catch (error) {
-            res.status(400).send({ error: error.message });
+            res.status(400).send({ data: [], message: "", error: error.message });
         }
     }
     else {
-        res.status(404).send("blog not found!");
+        res
+            .status(404)
+            .send({ data: [], message: "Blog not found !!", error: null });
         return;
     }
 });

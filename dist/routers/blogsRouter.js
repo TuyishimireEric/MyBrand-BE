@@ -31,15 +31,18 @@ const router = express_1.default.Router();
 const Blogs = __importStar(require("../controllers/blogsController"));
 const Comments = __importStar(require("../controllers/commentsController"));
 const Likes = __importStar(require("../controllers/likesController"));
+const authentication_1 = require("../middleware/authentication");
+const multerUpload_1 = require("../middleware/multerUpload");
+// ------------------ BLOGS ------------------- //
 router.get("/", Blogs.getBlogs);
-router.post("/", Blogs.createBlog);
+router.post("/", authentication_1.isAuthenticated, authentication_1.isAdmin, multerUpload_1.handleFileUpload, Blogs.createBlog);
 router.get("/:blogId", Blogs.getBlog);
-router.patch("/:blogId", Blogs.updateBlog);
-router.delete("/:blogId", Blogs.deleteBlog);
+router.patch("/:blogId", authentication_1.isAuthenticated, authentication_1.isAdmin, multerUpload_1.handleFileUpload, Blogs.updateBlog);
+router.delete("/:blogId", authentication_1.isAuthenticated, authentication_1.isAdmin, Blogs.deleteBlog);
 // ------------------ COMMENTS ------------------- //
 router.get("/:blogId/comments/", Comments.getBlogComments);
-router.post("/:blogId/comments/", Comments.createComment);
-router.patch("/:blogId/comments/:commentId", Comments.updateComment);
+router.post("/:blogId/comments/", authentication_1.isAuthenticated, Comments.createComment);
+router.patch("/:blogId/comments/:commentId", authentication_1.isAuthenticated, authentication_1.isAdmin, Comments.updateComment);
 router.get("/:blogId/comments/:commentId", Comments.getAComment);
 // ------------------ LIKES ------------------- //
 router.post("/:blogId/likes", Likes.addLike);
