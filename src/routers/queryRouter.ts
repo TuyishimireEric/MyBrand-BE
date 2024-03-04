@@ -7,6 +7,7 @@ router.post("/", Query.createQuery);
 router.get("/", isAuthenticated, isAdmin, Query.getQueries);
 router.get("/:queryId", isAuthenticated, isAdmin, Query.getQuery);
 router.patch("/:queryId", isAuthenticated, isAdmin, Query.updateQuery);
+router.delete("/:queryId", isAuthenticated, isAdmin, Query.deleteQuery);
 
 export default router;
 

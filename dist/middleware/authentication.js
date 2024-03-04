@@ -13,63 +13,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isAdmin = exports.isAuthenticated = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const passport_1 = __importDefault(require("passport"));
+const User_1 = __importDefault(require("../models/User"));
 dotenv_1.default.config();
-// export const isAuthenticated = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const authorization = req.header("Authorization");
-//     if (!authorization) {
-//       return res
-//         .status(403)
-//         .send({ data: [], message: "Not authorized!!", error: null });
-//     } else {
-//       const token = authorization.split(" ")[1];
-//       if (token) {
-//         const decoded: jwt.JwtPayload | string = jwt.verify(
-//           token,
-//           process.env.JWT_SECRET as string
-//         );
-//         if (typeof decoded === "string" || !("userId" in decoded)) {
-//           return res.status(400).send("Invalid token.");
-//         }
-//         if (!decoded || !decoded.userId) {
-//           return res.status(400).send("Invalid token.");
-//         }
-//         const user: userInterface | null = await User.findOne({
-//           _id: decoded.userId,
-//         });
-//         if (!user) {
-//           return res.status(400).send("User not found.");
-//         }
-//         req.user = user;
-//         next();
-//       } else {
-//         return res.send("not authorized token..");
-//       }
-//     }
-//   } catch (error: any) {
-//     return res
-//       .status(400)
-//       .send({ data: [], message: "error", error: error.message });
-//   }
-// };
-const isAuthenticated = (req, res, next) => {
-    passport_1.default.authenticate('jwt', { session: false }, (err, user, info) => {
-        if (err) {
-            return res.status(400).send({ data: [], message: "error", error: err.message });
+const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const authorization = req.header("Authorization");
+        if (!authorization) {
+            return res
+                .status(403)
+                .send({ data: [], message: "Not authorized!!", error: null });
         }
-        if (!user) {
-            return res.status(400).send({ data: [], message: "Not authorized!!", error: null });
+        else {
+            const token = authorization.split(" ")[1];
+            if (token) {
+                const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+                if (typeof decoded === "string" || !("userId" in decoded)) {
+                    return res.status(400).send("Invalid token.");
+                }
+                if (!decoded || !decoded.userId) {
+                    return res.status(400).send("Invalid token.");
+                }
+                const user = yield User_1.default.findOne({
+                    _id: decoded.userId,
+                });
+                if (!user) {
+                    return res.status(400).send("User not found.");
+                }
+                req.user = user;
+                next();
+            }
+            else {
+                return res.send("not authorized token..");
+            }
         }
-        req.user = user;
-        next();
-    })(req, res, next);
-};
+    }
+    catch (error) {
+        return res
+            .status(400)
+            .send({ data: [], message: "error", error: error.message });
+    }
+});
 exports.isAuthenticated = isAuthenticated;
 const isAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user) {

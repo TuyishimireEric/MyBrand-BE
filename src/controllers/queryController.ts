@@ -22,7 +22,7 @@ export const createQuery = async (req: Request, res: Response) => {
 
   const query = new Query(queryData);
   await query.save();
-  res.status(200).send({ data: query, message: "", error: null });
+  res.status(200).send({ data: query, message: "Query created successfully!!", error: null });
 };
 
 export const getQueries = async (req: Request, res: Response) => {
@@ -44,7 +44,6 @@ export const getQuery = async (req: Request, res: Response) => {
 
   // - Logic -----------------------------------------------
 
-  try {
     const query = await Query.findOne({
       _id: queryId,
       status: { $in: ["read", "unread"] },
@@ -56,11 +55,7 @@ export const getQuery = async (req: Request, res: Response) => {
         .send({ data: [], message: "query not found", error: null });
       return;
     }
-    res.send(query);
-  } catch {
-    res.status(404);
-    res.send({ data: [], message: "query doesn't exist!", error: null });
-  }
+    res.send({data: query, message: "query not found", error: null });
 };
 
 export const updateQuery = async (req: Request, res: Response) => {
@@ -75,8 +70,6 @@ export const updateQuery = async (req: Request, res: Response) => {
     return;
   }
 
-  // - Logic -----------------------------------------------
-
   const queryStatus: QueryStatus = req.body.status;
   const { error } = expectedQueryStatus.validate({ status: queryStatus });
 
@@ -85,7 +78,6 @@ export const updateQuery = async (req: Request, res: Response) => {
     return;
   }
 
-  try {
     const query = await Query.findByIdAndUpdate(
       queryId,
       {
@@ -100,8 +92,28 @@ export const updateQuery = async (req: Request, res: Response) => {
         .send({ data: [], message: "query not found", error: null });
       return;
     }
-    res.send({ data: query, message: "", error: null });
-  } catch (error: any) {
-    res.status(404).send({ data: [], message: "", error: error.message });
-  }
+    res.send({ data: query, message: "Query updated successfully!!", error: null });
+
 };
+
+export const deleteQuery = async(req: Request, res: Response)=>{
+  const { queryId } = req.params;
+  const queryIdValid = expectedParams.validate(queryId);
+  if (queryIdValid.error) {
+    res
+      .status(404)
+      .send({ data: [], message: "", error: queryIdValid.error.message });
+    return;
+  }
+
+  // - Logic -----------------------------------------------
+
+    const query = await Query.deleteOne({_id: queryId})
+    if (query.deletedCount == 0) {
+      res
+        .status(404)
+        .send({ data: [], message: "query not found", error: null });
+      return;
+    }
+    res.send({ data: [], message: "Query deleted successfully!!", error: null });
+}

@@ -34,4 +34,5 @@ router.post("/", Query.createQuery);
 router.get("/", authentication_1.isAuthenticated, authentication_1.isAdmin, Query.getQueries);
 router.get("/:queryId", authentication_1.isAuthenticated, authentication_1.isAdmin, Query.getQuery);
 router.patch("/:queryId", authentication_1.isAuthenticated, authentication_1.isAdmin, Query.updateQuery);
+router.delete("/:queryId", authentication_1.isAuthenticated, authentication_1.isAdmin, Query.deleteQuery);
 exports.default = router;

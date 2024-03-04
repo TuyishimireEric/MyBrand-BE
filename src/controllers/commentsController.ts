@@ -7,7 +7,6 @@ import {
   expectedParams,
 } from "../utils/validations";
 import _ from "lodash";
-import { error } from "console";
 
 export const createComment = async (req: Request, res: Response) => {
   // - Validate the Params ---------------------------------
@@ -49,7 +48,11 @@ export const createComment = async (req: Request, res: Response) => {
       try {
         const comment = new Comment(newComment);
         const result = await comment.save();
-        res.send(result);
+        res.send({
+          data: result,
+          message: "Comment added successfully!",
+          error: null,
+        });
       } catch (error: any) {
         res.status(400).send({ data: [], message: "", error: error.message });
       }
@@ -104,7 +107,7 @@ export const updateComment = async (req: Request, res: Response) => {
       if (!comment) {
         res
           .status(400)
-          .send({ data: [], message: "Comment no found!", error: null });
+          .send({ data: [], message: "Comment not found!", error: null });
         return;
       }
 
@@ -113,7 +116,7 @@ export const updateComment = async (req: Request, res: Response) => {
       res.status(400).send({ data: [], message: "", error: error.message });
     }
   } else {
-    res.status(404).send({ data: [], message: "Blog no found!", error: null });
+    res.status(404).send({ data: [], message: "Blog not found!", error: null });
     return;
   }
 };

@@ -7,65 +7,52 @@ import passport from 'passport';
 
 dotenv.config();
 
-// export const isAuthenticated = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const authorization = req.header("Authorization");
-//     if (!authorization) {
-//       return res
-//         .status(403)
-//         .send({ data: [], message: "Not authorized!!", error: null });
-//     } else {
-//       const token = authorization.split(" ")[1];
-//       if (token) {
-//         const decoded: jwt.JwtPayload | string = jwt.verify(
-//           token,
-//           process.env.JWT_SECRET as string
-//         );
+export const isAuthenticated = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const authorization = req.header("Authorization");
+    if (!authorization) {
+      return res
+        .status(403)
+        .send({ data: [], message: "Not authorized!!", error: null });
+    } else {
+      const token = authorization.split(" ")[1];
+      if (token) {
+        const decoded: jwt.JwtPayload | string = jwt.verify(
+          token,
+          process.env.JWT_SECRET as string
+        );
 
-//         if (typeof decoded === "string" || !("userId" in decoded)) {
-//           return res.status(400).send("Invalid token.");
-//         }
+        if (typeof decoded === "string" || !("userId" in decoded)) {
+          return res.status(400).send("Invalid token.");
+        }
 
-//         if (!decoded || !decoded.userId) {
-//           return res.status(400).send("Invalid token.");
-//         }
+        if (!decoded || !decoded.userId) {
+          return res.status(400).send("Invalid token.");
+        }
 
-//         const user: userInterface | null = await User.findOne({
-//           _id: decoded.userId,
-//         });
+        const user: userInterface | null = await User.findOne({
+          _id: decoded.userId,
+        });
 
-//         if (!user) {
-//           return res.status(400).send("User not found.");
-//         }
+        if (!user) {
+          return res.status(400).send("User not found.");
+        }
 
-//         req.user = user;
-//         next();
-//       } else {
-//         return res.send("not authorized token..");
-//       }
-//     }
-//   } catch (error: any) {
-//     return res
-//       .status(400)
-//       .send({ data: [], message: "error", error: error.message });
-//   }
-// };
-
-export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate('jwt', { session: false }, (err: any, user: userInterface, info: any) => {
-    if (err) {
-      return res.status(400).send({ data: [], message: "error", error: err.message });
+        req.user = user;
+        next();
+      } else {
+        return res.send("not authorized token..");
+      }
     }
-    if (!user) {
-      return res.status(400).send({ data: [], message: "Not authorized!!", error: null });
-    }
-    req.user = user;
-    next();
-  })(req, res, next);
+  } catch (error: any) {
+    return res
+      .status(400)
+      .send({ data: [], message: "error", error: error.message });
+  }
 };
 
 export const isAdmin = async (

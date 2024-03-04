@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateQuery = exports.getQuery = exports.getQueries = exports.createQuery = void 0;
+exports.deleteQuery = exports.updateQuery = exports.getQuery = exports.getQueries = exports.createQuery = void 0;
 const Query_1 = __importDefault(require("../models/Query"));
 const lodash_1 = __importDefault(require("lodash"));
 const validations_1 = require("../utils/validations");
@@ -29,7 +29,7 @@ const createQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     const query = new Query_1.default(queryData);
     yield query.save();
-    res.status(200).send({ data: query, message: "", error: null });
+    res.status(200).send({ data: query, message: "Query created successfully!!", error: null });
 });
 exports.createQuery = createQuery;
 const getQueries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,23 +48,17 @@ const getQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return;
     }
     // - Logic -----------------------------------------------
-    try {
-        const query = yield Query_1.default.findOne({
-            _id: queryId,
-            status: { $in: ["read", "unread"] },
-        });
-        if (!query) {
-            res
-                .status(404)
-                .send({ data: [], message: "query not found", error: null });
-            return;
-        }
-        res.send(query);
+    const query = yield Query_1.default.findOne({
+        _id: queryId,
+        status: { $in: ["read", "unread"] },
+    });
+    if (!query) {
+        res
+            .status(404)
+            .send({ data: [], message: "query not found", error: null });
+        return;
     }
-    catch (_a) {
-        res.status(404);
-        res.send({ data: [], message: "query doesn't exist!", error: null });
-    }
+    res.send({ data: query, message: "query not found", error: null });
 });
 exports.getQuery = getQuery;
 const updateQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -77,27 +71,41 @@ const updateQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             .send({ data: [], message: "", error: queryIdValid.error.message });
         return;
     }
-    // - Logic -----------------------------------------------
     const queryStatus = req.body.status;
     const { error } = validations_1.expectedQueryStatus.validate({ status: queryStatus });
     if (error) {
         res.status(400).send({ data: [], message: "", error: error.message });
         return;
     }
-    try {
-        const query = yield Query_1.default.findByIdAndUpdate(queryId, {
-            status: queryStatus,
-        }, { new: true });
-        if (!query) {
-            res
-                .status(404)
-                .send({ data: [], message: "query not found", error: null });
-            return;
-        }
-        res.send({ data: query, message: "", error: null });
+    const query = yield Query_1.default.findByIdAndUpdate(queryId, {
+        status: queryStatus,
+    }, { new: true });
+    if (!query) {
+        res
+            .status(404)
+            .send({ data: [], message: "query not found", error: null });
+        return;
     }
-    catch (error) {
-        res.status(404).send({ data: [], message: "", error: error.message });
-    }
+    res.send({ data: query, message: "Query updated successfully!!", error: null });
 });
 exports.updateQuery = updateQuery;
+const deleteQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { queryId } = req.params;
+    const queryIdValid = validations_1.expectedParams.validate(queryId);
+    if (queryIdValid.error) {
+        res
+            .status(404)
+            .send({ data: [], message: "", error: queryIdValid.error.message });
+        return;
+    }
+    // - Logic -----------------------------------------------
+    const query = yield Query_1.default.deleteOne({ _id: queryId });
+    if (query.deletedCount == 0) {
+        res
+            .status(404)
+            .send({ data: [], message: "query not found", error: null });
+        return;
+    }
+    res.send({ data: [], message: "Query deleted successfully!!", error: null });
+});
+exports.deleteQuery = deleteQuery;

@@ -49,7 +49,11 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             try {
                 const comment = new Comment_1.default(newComment);
                 const result = yield comment.save();
-                res.send(result);
+                res.send({
+                    data: result,
+                    message: "Comment added successfully!",
+                    error: null,
+                });
             }
             catch (error) {
                 res.status(400).send({ data: [], message: "", error: error.message });
@@ -98,7 +102,7 @@ const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             if (!comment) {
                 res
                     .status(400)
-                    .send({ data: [], message: "Comment no found!", error: null });
+                    .send({ data: [], message: "Comment not found!", error: null });
                 return;
             }
             res.send(comment);
@@ -108,7 +112,7 @@ const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
     }
     else {
-        res.status(404).send({ data: [], message: "Blog no found!", error: null });
+        res.status(404).send({ data: [], message: "Blog not found!", error: null });
         return;
     }
 });
