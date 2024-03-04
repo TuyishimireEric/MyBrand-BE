@@ -20,7 +20,8 @@
   "scripts": {
     "test": "jest --coverage",
     "test:watch": "jest --watch --coverage",
-    "start": "nodemon"
+    "start": "nodemon",
+    "build": "tsc"
   },
   "nodemonConfig": {
     "watch": [
