@@ -20,6 +20,8 @@ export const setupTests = () => {
  beforeAll(async () => {
     await mongoose.connect(DBUrl);
 
+    console.log("DBUrl", DBUrl);
+
     const payload: {
       email: string;
       password: string;
