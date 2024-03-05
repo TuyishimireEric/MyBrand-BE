@@ -1,0 +1,10 @@
+# .gitignore
+node_modules/
+
+# .env
+.env
+
+coverage
+dist
+
+package-lock.json
