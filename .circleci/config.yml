@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@4.1.0
-  coveralls: coveralls/coveralls@2.2.1
+  # coveralls: coveralls/coveralls@2.2.1
 workflows:
   build:
     jobs:
@@ -21,7 +21,7 @@ jobs:
             echo "##[endgroup]"
       - run: npm ci
       - run: npm test
-      - run:
-          name: Upload coverage to Coveralls
-          command: |
-            ./coveralls report || true  # Execute the Coveralls reporting command and ignore errors
+      # - run:
+      #     name: Upload coverage to Coveralls
+      #     command: |
+      #       ./coveralls report || true  # Execute the Coveralls reporting command and ignore errors
