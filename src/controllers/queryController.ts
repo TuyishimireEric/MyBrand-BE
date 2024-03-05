@@ -110,10 +110,9 @@ export const deleteQuery = async(req: Request, res: Response)=>{
 
     const query = await Query.deleteOne({_id: queryId})
     if (query.deletedCount == 0) {
-      res
+      return res
         .status(404)
         .send({ data: [], message: "query not found", error: null });
-      return;
     }
     res.send({ data: [], message: "Query deleted successfully!!", error: null });
 }

@@ -21,33 +21,72 @@ export const addLike = async (req: Request, res: Response) => {
 
   try {
     const blogExist = await Blog.exists({ _id: blogId });
-    const user = "Paul";
+    if (!req.user || !("_id" in req.user)) {
+      return res.send({ data: [], message: "No UserName provided", error: null });
+    }
+    const userId: any = req.user._id;
 
     if (blogExist) {
-      const newLike = {
-        blogId: blogId,
-        likedBy: user,
-      };
-
       try {
-        const like = new Like(newLike);
-        const result = await like.save();
-        const likes = await Like.find({
+        const currentLikes = await Like.find({
           blogId: blogId,
         });
 
-        res.send({data: likes.length, message: "Liked", error: null});
+        try {
+          const likedBefore = await Like.find({
+            blogId: blogId,
+            likedBy: userId,
+          });
+
+          if (likedBefore.length > 0) {
+            const unLike = await Like.deleteOne({ _id: likedBefore[0]._id });
+            if (unLike.deletedCount != 0) {
+              return res.send({
+                data: currentLikes.length - 1,
+                message: "unLiked",
+                error: null,
+              });
+            } else {
+              return res.send({
+                data: null,
+                message: "Failed to unlike",
+                error: "Document not found or already unliked",
+              });
+            }
+          } else {
+
+            const newLike = {
+              blogId: blogId,
+              likedBy: userId,
+            };
+
+            
+            const like = new Like(newLike);
+            const result = await like.save();
+
+            return res.send({
+              data: currentLikes.length + 1,
+              message: "Liked",
+              error: null,
+            });
+          }
+        } catch (error: any) {
+          return res.send({
+            data: null,
+            message: "An error occurred",
+            error: error.message,
+          });
+        }
       } catch (error: any) {
         res.status(400).send({ data: [], message: "", error: error.message });
       }
     } else {
-      res
+      return res
         .status(404)
         .send({ data: [], message: "blog not found!", error: null });
-      return;
     }
   } catch (error: any) {
-    res.status(400).send({ data: [], message: "", error: error.message });
+    return res.status(400).send({ data: [], message: "", error: error.message });
   }
 };
 
@@ -57,7 +96,9 @@ export const getBlogLikes = async (req: Request, res: Response) => {
   const { blogId } = req.params;
   const blogIdValid = expectedParams.validate(blogId);
   if (blogIdValid.error) {
-    res.status(404).send({ data: [], message: "", error: blogIdValid.error.message });
+    res
+      .status(404)
+      .send({ data: [], message: "", error: blogIdValid.error.message });
     return;
   }
 
@@ -70,12 +111,12 @@ export const getBlogLikes = async (req: Request, res: Response) => {
       const likes = await Like.find({
         blogId: blogId,
       });
-      res.status(200).send({data: likes.length, message: "", error: null});
+      res.status(200).send({ data: likes.length, message: "", error: null });
     } catch (error: any) {
       res.status(500).send({ data: [], message: "", error: error.message });
     }
   } else {
-    res.status(404).send({ data: [], message:"blog not found!", error: null});
+    res.status(404).send({ data: [], message: "blog not found!", error: null });
     return;
   }
 };

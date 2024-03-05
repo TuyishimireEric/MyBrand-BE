@@ -17,13 +17,14 @@ router.delete("/:blogId", isAuthenticated, isAdmin, Blogs.deleteBlog);
 // ------------------ COMMENTS ------------------- //
 
 router.get("/:blogId/comments/", Comments.getBlogComments);
-router.post("/:blogId/comments/", isAuthenticated, Comments.createComment);
+router.post("/:blogId/comments/", Comments.createComment);
 router.patch("/:blogId/comments/:commentId", isAuthenticated, isAdmin, Comments.updateComment);
 router.get("/:blogId/comments/:commentId", Comments.getAComment);
+router.delete("/:blogId/comments/:commentId", isAuthenticated, isAdmin, Comments.deleteAComment);
 
 // ------------------ LIKES ------------------- //
 
-router.post("/:blogId/likes", Likes.addLike);
+router.post("/:blogId/likes", isAuthenticated, Likes.addLike);
 router.get("/:blogId/likes/", Likes.getBlogLikes);
 
 

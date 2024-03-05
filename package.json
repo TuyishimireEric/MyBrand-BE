@@ -17,10 +17,11 @@
     "passport-jwt": "^4.0.1"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --detectOpenHandles --testTimeout=5000",
     "test:watch": "jest --watch --coverage",
-    "start": "nodemon",
-    "build": "tsc"
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node ./dist/server.js"
   },
   "nodemonConfig": {
     "watch": [
@@ -30,9 +31,11 @@
     "ignore": [
       "src/**/*.spec.ts"
     ],
-    "exec": "tsc && node ./dist/index.js"
+    "exec": "tsc && node ./dist/server.js"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
     "@babel/preset-typescript": "^7.23.3",
     "@jest/globals": "^29.7.0",
     "@types/bcryptjs": "^2.4.6",

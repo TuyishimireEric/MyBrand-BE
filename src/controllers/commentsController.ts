@@ -68,6 +68,12 @@ export const createComment = async (req: Request, res: Response) => {
 };
 
 export const updateComment = async (req: Request, res: Response) => {
+
+  const { error } = expectedCommentUpdate.validate(req.body);
+  if (error) {
+    res.status(400).send({ data: [], message: "", error: error.message });
+    return;
+  }
   // - Validate the Params ---------------------------------
 
   const { blogId, commentId } = req.params;
@@ -82,11 +88,6 @@ export const updateComment = async (req: Request, res: Response) => {
     return;
   }
 
-  const { error } = expectedCommentUpdate.validate(req.body);
-  if (error) {
-    res.status(400).send({ data: [], message: "", error: error.message });
-    return;
-  }
 
   // - Logic -----------------------------------------------
 
@@ -111,7 +112,11 @@ export const updateComment = async (req: Request, res: Response) => {
         return;
       }
 
-      res.send(comment);
+      res.send({
+        data: comment,
+        message: "Comment updated successfully!",
+        error: null,
+      });
     } catch (error: any) {
       res.status(400).send({ data: [], message: "", error: error.message });
     }
@@ -143,15 +148,8 @@ export const getBlogComments = async (req: Request, res: Response) => {
         blogId: req.params.blogId,
         visible: true,
       });
-      if (comments.length === 0) {
-        res.status(404).send({
-          data: [],
-          message: "No comments found for this blog",
-          error: null,
-        });
-      } else {
-        res.status(200).send({ data: comments, message: "", error: null });
-      }
+
+      res.status(200).send({ data: comments, message: "", error: null });
     } catch (error: any) {
       res.status(500).send({ data: [], message: "", error: error.message });
     }
@@ -200,3 +198,44 @@ export const getAComment = async (req: Request, res: Response) => {
     return;
   }
 };
+
+export const deleteAComment = async (req: Request, res: Response) => {
+  // - Validate the Params ---------------------------------
+
+  const { blogId, commentId } = req.params;
+  const blogIdValid = expectedParams.validate(blogId);
+  const commentIdValid = expectedParams.validate(commentId);
+  if (blogIdValid.error || commentIdValid.error) {
+    res.status(404).send({
+      data: [],
+      message: "",
+      error: blogIdValid.error?.message || commentIdValid.error?.message,
+    });
+    return;
+  }
+
+  // - Logic -----------------------------------------------
+
+  const blogExist = await Blog.exists({ _id: blogId });
+
+  if (blogExist) {
+    try {
+      const comment = await Comment.deleteOne({ _id: req.params.commentId });
+      if (comment.deletedCount != 0) {
+       return res.status(200).send({ data: [], message: "Comment deleted successfully!!", error: null });
+      } else {
+       return res
+          .status(400)
+          .send({ data: [], message: "Comments not found !!", error: null });
+      }
+    } catch (error: any) {
+      return res.status(400).send({ data: [], message: "", error: error.message });
+    }
+  } else {
+    res
+      .status(404)
+      .send({ data: [], message: "Blog not found !!", error: null });
+    return;
+  }
+};
+
