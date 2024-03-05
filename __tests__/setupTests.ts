@@ -24,8 +24,8 @@ export const setupTests = () => {
       email: string;
       password: string;
     } = {
-      email: process.env.ADMIN_EMAIL || "",
-      password: process.env.ADMIN_PASSWORD || "",
+      email: process.env.ADMIN_EMAIL || "tuyishimireericc@gmail.com",
+      password: process.env.ADMIN_PASSWORD || "Eric@196",
     };
     const response = await supertest(app)
       .post(`/api/users/login`)
