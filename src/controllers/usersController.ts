@@ -18,6 +18,7 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(400).send({ data: [], message: "", error: error.message });
   }
 
+  try {
     const user = await User.findOne({ email: userData.email });
     if (user) {
         return res
@@ -42,6 +43,9 @@ export const createUser = async (req: Request, res: Response) => {
         });
       }
     }
+  } catch (error: any) {
+    return res.status(500).send({ data: [], message: "", error: error.message });
+  }
 };
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -54,6 +58,8 @@ export const loginUser = async (req: Request, res: Response) => {
       .send({ data: [], message: "", error: error.message });
   }
 
+  try {
+    
     const user = await User.findOne({ email: userData.email });
     if (user) {
       const isValid = await bcrypt.compareSync(
@@ -86,6 +92,9 @@ export const loginUser = async (req: Request, res: Response) => {
         error: null,
       });
     }
+  } catch (error: any) {
+    return res.status(500).send({ data: [], message: "", error: error.message });
+  }
 };
 
 export const deleteUser = async (req: Request, res: Response) => {

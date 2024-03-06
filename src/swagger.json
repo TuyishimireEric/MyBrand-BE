@@ -1,0 +1,934 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My Blog API",
+    "version": "1.0.0",
+    "description": "My brand API documentation serves as a comprehensive guide for developers, It offers clear, concise instructions on endpoints, authentication, and data formats"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "development server"
+    },
+    {
+      "url": "https://mybrand-be-95he.onrender.com",
+      "description": "production server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "token": {
+        "type": "apiKey",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "paths": {
+    "/api/users/signup": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Create a user",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userName": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWU1ZGVhZjcxZjhjMDBlNjZlNWUyMDYiLCJpYXQiOjE3MDk2NjU3MjIsImV4cCI6MTcwOTY3MjkyMn0.JTjNO1wa0UjBmSDlcbQYM8R_4DG8BCQ9JpR9E-bATxM",
+                  "message": "Signed in successfully!!",
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Create a user",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWU1ZGVhZjcxZjhjMDBlNjZlNWUyMDYiLCJpYXQiOjE3MDk2NjU3MjIsImV4cCI6MTcwOTY3MjkyMn0.JTjNO1wa0UjBmSDlcbQYM8R_4DG8BCQ9JpR9E-bATxM",
+                  "message": "Signed in successfully!!",
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs": {
+      "post": {
+        "tags": ["blogs"],
+        "summary": "Create a blog",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "the image of the blog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "title": "My test with standup",
+                    "image": "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1709666075/pforaqbrjbrd0hcbalud.jpg",
+                    "createdBy": "Eric Tuyishimire",
+                    "description": "My test blog content",
+                    "_id": "65e76f1b8aace71a4362b657",
+                    "createdAt": "2024-03-05T19:14:35.541Z",
+                    "updatedAt": "2024-03-05T19:14:35.541Z",
+                    "__v": 0
+                  },
+                  "message": "Blog created successfully!!",
+                  "error": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["blogs"],
+        "summary": "List all blogs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "_id": "65e5e0ee31eff49313343476",
+                      "title": "My test with standup",
+                      "image": "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1709564142/v4xcvte85h7wczscfbox.jpg",
+                      "createdBy": "Eric Tuyishimire",
+                      "description": "My test blog content",
+                      "createdAt": "2024-03-04T14:55:42.187Z",
+                      "updatedAt": "2024-03-04T14:55:42.187Z",
+                      "__v": 0
+                    },
+                    {
+                      "_id": "65e75c025801319e38664c1e",
+                      "title": "Test Blog",
+                      "image": "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1709661186/ay6nphzl06n4qneojagq.png",
+                      "createdBy": "Eric Tuyishimire",
+                      "description": "This is a test blog",
+                      "createdAt": "2024-03-05T17:53:06.554Z",
+                      "updatedAt": "2024-03-05T17:53:06.554Z",
+                      "__v": 0
+                    }
+                  ],
+                  "message": "",
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/65e5e0ee31eff49313343476": {
+      "patch": {
+        "tags": ["blogs"],
+        "summary": "Update a blog",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "the image of the blog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "title": "My test with standup",
+                    "image": "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1709666075/pforaqbrjbrd0hcbalud.jpg",
+                    "createdBy": "Eric Tuyishimire",
+                    "description": "My test blog content",
+                    "_id": "65e76f1b8aace71a4362b657",
+                    "createdAt": "2024-03-05T19:14:35.541Z",
+                    "updatedAt": "2024-03-05T19:14:35.541Z",
+                    "__v": 0
+                  },
+                  "message": "Blog updated successfully!!",
+                  "error": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["blogs"],
+        "summary": "Get a blog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "message"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "_id": "65e5e0ee31eff49313343476",
+                    "title": "My test with standup",
+                    "image": "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1709564142/v4xcvte85h7wczscfbox.jpg",
+                    "createdBy": "Eric Tuyishimire",
+                    "description": "My test blog content",
+                    "createdAt": "2024-03-04T14:55:42.187Z",
+                    "updatedAt": "2024-03-04T14:55:42.187Z",
+                    "__v": 0
+                  },
+                  "message": "",
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["blogs"],
+        "summary": "Delete a blog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "message"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": [],
+                  "message": "Blog deleted successfully!!",
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/65e5e0ee31eff49313343476/comments": {
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Create a comment",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commentedBy": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "comment": "This is a test comment",
+                    "blogId": "65e5e0ee31eff49313343476",
+                    "createdBy": "Eric Tuyishimire",
+                    "_id": "65e76f1b8aace71a4362b657",
+                    "createdAt": "2024-03-05T19:14:35.541Z",
+                    "updatedAt": "2024-03-05T19:14:35.541Z",
+                    "__v": 0
+                  },
+                  "message": "Comment created successfully!!",
+                  "error": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Comments"],
+        "summary": "List blog all comments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "_id": "65e5e0ee31eff49313343476",
+                      "comment": "This is a test comment",
+                      "blogId": "65e5e0ee31eff49313343476",
+                      "createdBy": "Eric Tuyishimire",
+                      "createdAt": "2024-03-04T14:55:42.187Z",
+                      "updatedAt": "2024-03-04T14:55:42.187Z",
+                      "__v": 0
+                    },
+                    {
+                      "_id": "65e75c025801319e38664c1e",
+                      "comment": "This is a test comment",
+                      "blogId": "65e5e0ee31eff49313343476",
+                      "createdBy": "Eric Tuyishimire",
+                      "createdAt": "2024-03-05T17:53:06.554Z",
+                      "updatedAt": "2024-03-05T17:53:06.554Z",
+                      "__v": 0
+                    }
+                  ],
+                  "message": "",
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/65e5e0ee31eff49313343476/comments/65e5e0ee31eff49313343476": {
+      "patch": {
+        "tags": ["Comments"],
+        "summary": "Update a comment visible to the public",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "visible": {
+                    "type": "boolean",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "_id": "65e5e0ee31eff49313343476",
+                    "comment": "This is a test comment",
+                    "blogId": "65e5e0ee31eff49313343476",
+                    "createdBy": "Eric Tuyishimire",
+                    "visible": false,
+                    "createdAt": "2024-03-04T14:55:42.187Z",
+                    "updatedAt": "2024-03-04T14:55:42.187Z",
+                    "__v": 0
+                  },
+                  "message": "Comment updated successfully!!",
+                  "error": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Comments"],
+        "summary": "Get a comment",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "message"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "_id": "65e5e0ee31eff49313343476",
+                    "comment": "This is a test comment",
+                    "blogId": "65e5e0ee31eff49313343476",
+                    "createdBy": "Eric Tuyishimire",
+                    "visible": true,
+                    "createdAt": "2024-03-04T14:55:42.187Z",
+                    "updatedAt": "2024-03-04T14:55:42.187Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/query": {
+      "get": {
+        "tags": ["queries"],
+        "summary": "Get all queries",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "_id": "65e6dc2222a31c570ea1f4ff",
+                      "name": "Paul",
+                      "email": "mutabazi@gmail.com",
+                      "description": "Paul's query",
+                      "status": "unread",
+                      "createdAt": "2024-03-05T08:47:30.195Z",
+                      "updatedAt": "2024-03-05T08:47:30.195Z",
+                      "__v": 0
+                    }
+                  ],
+                  "message": "",
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["queries"],
+        "summary": "Create a query",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "_id": "65e6dc2222a31c570ea1f4ff",
+                    "name": "Paul",
+                    "email": "mutabazi@gmail.com",
+                    "description": "Paul's query",
+                    "status": "unread",
+                    "createdAt": "2024-03-05T08:47:30.195Z",
+                    "updatedAt": "2024-03-05T08:47:30.195Z",
+                    "__v": 0
+                  },
+                  "message": "Query created successfully!!",
+                  "error": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/query/65e6dc2222a31c570ea1f4ff": {
+      "patch": {
+        "tags": ["queries"],
+        "summary": "Update a query",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "_id": "65e6dc2222a31c570ea1f4ff",
+                    "name": "Paul",
+                    "email": "mutabazi@gmail.com",
+                    "description": "Paul's query",
+                    "status": "read",
+                    "createdAt": "2024-03-05T08:47:30.195Z",
+                    "updatedAt": "2024-03-05T08:47:30.195Z",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["queries"],
+        "summary": "Get a query",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "message"
+                    },
+                    "error": {
+                      "type": "error"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "_id": "65e6dc2222a31c570ea1f4ff",
+                    "name": "Paul",
+                    "email": "mutabazi@gmail.com",
+                    "description": "Paul's query",
+                    "status": "unread",
+                    "createdAt": "2024-03-05T08:47:30.195Z",
+                    "updatedAt": "2024-03-05T08:47:30.195Z",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blogs/65e5e0ee31eff49313343476/likes": {
+        "post": {
+            "tags": ["Likes"],
+            "summary": "like or unlike a blog",
+            "security": [
+                {
+                    "token": []
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "type": "number"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "error": {
+                                        "type": "error"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "data": 2,
+                                "message": "Liked",
+                                "error": null
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "tags": ["Likes"],
+            "summary": "List blog all likes",
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "type": "number"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "error": {
+                                        "type": "error"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "data": 3,
+                                "message": "",
+                                "error": null
+                            }
+                        }
+                    }
+                }
+            }
+        }  
+        
+            
+    }
+  }
+}

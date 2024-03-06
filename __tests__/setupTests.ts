@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import app, { DBUrl } from "../src/index";
+import app from "../src/index";
 import supertest from "supertest";
 
 interface IsharedState {
@@ -18,16 +18,15 @@ export const sharedState:IsharedState = {
 
 export const setupTests = () => {
  beforeAll(async () => {
+   const DBUrl = "mongodb+srv://tuyishimireericc:D7EQDiK4fBnYU91p@mybrandtest.sakyzeg.mongodb.net/?retryWrites=true&w=majority&appName=myBrandTest";
     await mongoose.connect(DBUrl);
-
-   console.log("DB connected", DBUrl);
 
     const payload: {
       email: string;
       password: string;
     } = {
-      email: process.env.ADMIN_EMAIL || "",
-      password: process.env.ADMIN_PASSWORD || "",
+      email: "test@gmail.com",
+      password: "Test@123"
     };
     const response = await supertest(app)
       .post(`/api/users/login`)

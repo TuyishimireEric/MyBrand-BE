@@ -94,13 +94,13 @@ describe(`
     });
   });
   describe("Login a user", () => {
-    test("login with a valid email", async () => {
+    test("login with an invalid email", async () => {
       const payload: {
         email: string;
         password: string;
       } = {
-        email: "ericMucyogmail.com",
-        password: "Eric@124",
+        email: "test.com",
+        password: "Test@123"
       };
       const response = await supertest(app)
         .post(`/api/users/login`)
@@ -145,8 +145,8 @@ describe(`
         email: string;
         password: string;
       } = {
-        email: process.env.ADMIN_EMAIL || "",
-        password: process.env.ADMIN_PASSWORD || "",
+        email: "test@gmail.com",
+        password: "Test@123"
       };
       const response = await supertest(app)
         .post(`/api/users/login`)
@@ -166,6 +166,7 @@ describe(`
         })
         .set("Authorization", `Bearer ${sharedState.token}`);
 
+
       expect(response.body.error).toContain("must be a valid email");
     });
 
@@ -182,7 +183,7 @@ describe(`
     });
 
     test("Search a user with a existing email", async () => {
-      const userEmail: string = process.env.ADMIN_EMAIL || "";
+      const userEmail: string = "mutabazi8@gmail.com";
       const response = await supertest(app)
         .get(`/api/users/find/`)
         .send({
@@ -195,12 +196,10 @@ describe(`
   });
 
   describe("delete a user", () => {
-    const invalidID = "1234";
 
     test("delete  with a invalid userId", async () => {
-      const userId: string = invalidID;
       const response = await supertest(app)
-        .delete(`/api/users/${userId}`)
+        .delete(`/api/users/123}`)
         .set("Authorization", `Bearer ${sharedState.token}`);
 
       expect(response.body.error).toContain("Invalid ID");
