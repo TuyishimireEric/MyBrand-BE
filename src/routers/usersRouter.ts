@@ -7,6 +7,7 @@ router.post("/signup", Users.createUser);
 router.post("/login", Users.loginUser);
 router.delete("/:userId", isAuthenticated, isAdmin, Users.deleteUser);
 router.get("/find", isAuthenticated, isAdmin, Users.getUser);
+router.post("/validate", isAuthenticated, Users.validateUser);
 
 export default router;
 

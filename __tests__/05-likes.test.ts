@@ -35,6 +35,16 @@ describe(`
       expect(response.body.message).toContain("blog not found");
     });
 
+    test("token should be valid", async () => {
+      const unKnownToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWU5NjJjNDNhNzNhOWIyZTNhNjA4YmIiLCJpYXQiOjE3MDk4MDMzNjEsImV4cCI6MTcwOTgxMDU2MX0.8-Duqa__PvV2995Bis6t8SSxhlcuLziduI0H4QDSiaa";
+      const response = await supertest(app)
+        .post(`/api/blogs/${sharedState.inValidBlogId}/likes/`)
+        .set("Authorization", `Bearer ${unKnownToken}`);
+
+      expect(response.body.error).toContain("invalid signature");
+    });
+
+
     test("should like", async () => {
       const response = await supertest(app)
         .post(`/api/blogs/${validBlogId}/likes/`)
@@ -58,6 +68,14 @@ describe(`
     test("blog should be found", async () => {
       const response = await supertest(app).get(
         `/api/blogs/${invalidID}/likes/`
+      );
+
+      expect(response.statusCode).toBe(404);
+    });
+
+    test("blog should be found", async () => {
+      const response = await supertest(app).get(
+        `/api/blogs/123/likes/`
       );
 
       expect(response.statusCode).toBe(404);

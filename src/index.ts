@@ -5,6 +5,7 @@ import userRouter from "./routers/usersRouter";
 import dotenv from "dotenv";
 import swaggerUI from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
+import cors from 'cors';
 
 dotenv.config();
 // export const DBUrl = "mongodb+srv://tuyishimireericc:D7EQDiK4fBnYU91p@mybrandtest.sakyzeg.mongodb.net/?retryWrites=true&w=majority&appName=myBrandTest";
@@ -12,6 +13,7 @@ export const DBUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS
 // export const DBUrl = "mongodb://localhost:27017/MyBland";
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 

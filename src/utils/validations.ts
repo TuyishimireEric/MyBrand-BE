@@ -15,13 +15,14 @@ export const expectedLogin = Joi.object({
 export const expectedBlog = Joi.object({
   title: Joi.string().min(4).max(30).required(),
   description: Joi.string().required(),
+  image: Joi.string()
 });
 
 
 export const expectedQuery = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
-  description: Joi.string().min(3).max(500).required(),
+  description: Joi.string().min(3).max(1000).required(),
 });
 
 export const expectedQueryStatus = Joi.object({
@@ -32,7 +33,7 @@ export const expectedQueryStatus = Joi.object({
 
 export const expectedComment = Joi.object({
   commentedBy: Joi.string().min(3).max(30).required(),
-  description: Joi.string().min(3).max(500).required(),
+  description: Joi.string().min(3).max(1000).required(),
 });
 
 export const expectedCommentUpdate = Joi.object({

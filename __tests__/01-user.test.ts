@@ -166,9 +166,6 @@ describe(`
         })
         .set("Authorization", `Bearer ${sharedState.token}`);
 
-        console.log("sharedState.token", sharedState.token);
-        console.log("response.body", response.body);
-
       expect(response.body.error).toContain("must be a valid email");
     });
 

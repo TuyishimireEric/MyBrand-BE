@@ -27,11 +27,11 @@ export const isAuthenticated = async (
         );
 
         if (typeof decoded === "string" || !("userId" in decoded)) {
-          return res.status(400).send("Invalid token.");
+          return res.status(400).send({data: null, message:"Invalid token.", error: "Invalid token."});
         }
 
         if (!decoded || !decoded.userId) {
-          return res.status(400).send("Invalid token.");
+          return res.status(400).send({data: null, message:"Invalid token.", error: "Invalid token."});
         }
 
         const user: userInterface | null = await User.findOne({
@@ -39,13 +39,11 @@ export const isAuthenticated = async (
         });
 
         if (!user) {
-          return res.status(400).send("User not found.");
+          return res.status(400).send({data: null, message:"User not found.", error: "User not found."});
         }
 
         req.user = user;
         next();
-      } else {
-        return res.send("not authorized token..");
       }
     }
   } catch (error: any) {

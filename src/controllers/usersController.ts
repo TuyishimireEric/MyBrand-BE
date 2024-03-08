@@ -150,3 +150,18 @@ export const getUser = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const validateUser = async (req: Request, res: Response) => {
+  // - Validate the Params ---------------------------------
+  if (!req.user) {
+    return res.send("not authorized ...");
+  }
+
+  if (!("role" in req.user)) {
+    return res.send("not authorized ...");
+  }else {
+    return res
+      .status(200)
+      .send({ data: _.pick(req.user, ["userName","email","role"]), message: "User found", error: null });
+  }
+}

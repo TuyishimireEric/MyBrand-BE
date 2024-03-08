@@ -32,7 +32,6 @@ export const addLike = async (req: Request, res: Response) => {
           blogId: blogId,
         });
 
-        try {
           const likedBefore = await Like.find({
             blogId: blogId,
             likedBy: userId,
@@ -70,13 +69,6 @@ export const addLike = async (req: Request, res: Response) => {
               error: null,
             });
           }
-        } catch (error: any) {
-          return res.send({
-            data: null,
-            message: "An error occurred",
-            error: error.message,
-          });
-        }
       } catch (error: any) {
         res.status(400).send({ data: [], message: "", error: error.message });
       }

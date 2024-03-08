@@ -50,7 +50,7 @@ export const createBlog = async (req: Request, res: Response) => {
     } catch (error: any) {
       return res
         .status(400)
-        .send({ data: [], message: "", error: error.message });
+        .send({ data: [], message: "Server error", error: error.message });
     }
   }
 };
@@ -100,26 +100,29 @@ export const updateBlog = async (req: Request, res: Response) => {
       .send({ data: [], message: "", error: blogIdValid.error.message });
   }
 
-  const blogData: Partial<BlogInterface> = _.pick(req.body, [
-    "title",
-    "description",
-  ]);
-  const { error } = expectedBlog.validate(blogData);
+  // const blogData: Partial<BlogInterface> = _.pick(req.body, [
+  //   "title",
+  //   "description",
+  //   "image"
+  // ]);
+  // const { error } = expectedBlog.validate(blogData);
 
-  if (error) {
+  // if (error) {
+  //   return res
+  //     .status(400)
+  //     .send({ data: [], message: "", error: error.message });
+  // }
+
+  if (!req.file && !req.body.image)
     return res
       .status(400)
-      .send({ data: [], message: "", error: error.message });
+      .send({ data: [], message: "No Image provided!!", error: "No Image provided!!" });
+
+  let imageUrl = req.body.image;
+  if(req.file){
+    const { buffer, originalname } = req.file;
+    imageUrl = await uploadFiles(buffer, originalname);
   }
-
-  if (!req.file)
-    return res
-      .status(400)
-      .send({ data: [], message: "No Image provided!!", error: "" });
-
-  const { buffer, originalname } = req.file;
-
-  const imageUrl = await uploadFiles(buffer, originalname);
 
   try {
     const blog = await Blog.findByIdAndUpdate(
@@ -133,7 +136,7 @@ export const updateBlog = async (req: Request, res: Response) => {
     );
 
     if (blog) {
-      res.send({
+      return res.send({
         data: blog,
         message: "Blog updated successfully!!",
         error: null,
@@ -141,12 +144,12 @@ export const updateBlog = async (req: Request, res: Response) => {
     } else {
       return res
         .status(404)
-        .send({ data: [], message: "Blog not found!!", error: null });
+        .send({ data: [], message: "Blog not found!!", error:"Blog not found!!" });
     }
   } catch (error: any) {
     return res
       .status(404)
-      .send({ data: [], message: "", error: error.message });
+      .send({ data: [], message: "Server Error", error: error.message });
   }
 };
 
@@ -166,7 +169,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
     if (blog.deletedCount == 0) {
       return res
         .status(404)
-        .send({ data: [], message: "Blog not found!!", error: null });
+        .send({ data: [], message: "Blog not found!!", error: "Blog not found!!" });
     } else {
       return res
         .status(200)
